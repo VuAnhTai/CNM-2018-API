@@ -1,50 +1,74 @@
-
-$("#btnSubmit").click(function() {
-    var name = $('#name').val();
-    var phone = $('#phone').val();
-    var address = $('#address').val();
-    var note = $('#note').val();
-    console.log(name, note)
-    axios.post('http://localhost:3000/app1/request', {
-        name: name,
-        phone: phone,
-        address:address,
-        note:note,
-    })
-    .then(function (response) {
-        alert("Thành công");
-    })
-    .catch(function (error) {
-        alert("Lỗi");
-    });
-
-    // $.ajax({
-    //     url: 'http://localhost:3000/app1/request',
-    //     type: 'POST',
-    //     dataType: 'json',
-    //     timeout: 10000
-    // })
-    //     .fail(function () {
-    //         var source = document.getElementById("fail-template").innerHTML;
-    //         var template = Handlebars.compile(source);
-    //         var html = template();
-    //         var html2='<input type="text" class="form-control" >';
-    //         $('#vietnam').html(html2);
-    //         $('#fail').show();
-    //         $('#fail').html(html);
-    // })
-    //     .done(function(data) {
-    //     $.ajax({
-    //         url: 'http://localhost:3000/translate/EnglishToVietnamese?english='+data.english,
-    //         type: 'GET',
-    //         dataType: 'json',
-    //         timeout: 10000
-    //     }).done(function(data2) {
-    //         var source = document.getElementById("vietnamese-template").innerHTML;
-    //         var template = Handlebars.compile(source);
-    //         var html = template(data2);
-    //          $('#vietnam').html(html);
-    //          $('#fail').hide();
-    //     })
-    // })
-});
+window.onload = function () {
+    vm;
+}
+var vm = new Vue({
+    el: '#container',
+    data: {
+        userName: '',
+        password: '',
+        loginVisible: true,
+        requestsVisible: false,
+        token: "",
+        refToken: "",
+    },
+    methods: {
+        login: function () {
+            var self = this;
+            axios.post('http://localhost:3000/app2/login', {
+                    userName: self.userName,
+                    password: self.password,
+                })
+                .then(function (response) {
+                    self.token = response.data.access_token;
+                    self.refToken = response.data.refresh_token;
+                })
+                .catch(function (error) {
+                    alert(error);
+                }).then(function () {
+                    self.requestsVisible = true;
+                    self.loginVisible = false;
+                })
+        },
+        submitRequest: function () {
+            var self = this;
+            var name = $('#name').val();
+            var phone = $('#phone').val();
+            var address = $('#address').val();
+            var note = $('#note').val();
+            var token = self.token;
+            axios.post('http://localhost:3000/app1/request', {
+                    token: token,
+                    name: name,
+                    phone: phone,
+                    address: address,
+                    note: note,
+                })
+                .then(function (response) {
+                    alert("Thành công");
+                })
+                .catch(function (error) {
+                    if (error.response.status === 401) {
+                        self.refreshToken();
+                        return;
+                    }
+                    alert("Lỗi");
+                });
+        },
+        refreshToken: function () {
+            var self = this;
+            axios.post('http://localhost:3000/api/users/refreshToken', {
+                    refToken: self.refToken,
+                })
+                .then(function (response) {
+                    self.token = response.data.access_token;
+                    self.submitRequest();
+                })
+                .catch(function (error) {
+                    if (error.response.status === 401) {
+                        self.loginVisible = true;
+                        self.requestsVisible = false;
+                    }
+                })
+        },
+    },
+})

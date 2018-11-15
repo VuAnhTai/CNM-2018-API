@@ -20,8 +20,12 @@ exports.generateAccessToken = userEntity => {
 }
 
 exports.verifyAccessToken = (req, res, next) => {
+    //get
     var token = req.headers['token'];
-    console.log(token);
+    //post
+    if(!token){
+        var token = req.body.token;
+    }
     if (token) {
         jwt.verify(token, SECRET, (err, payload) => {
             if (err) {
