@@ -1,0 +1,13 @@
+{
+    "DB":{
+        "database": "grab",
+        "username": "root",
+        "password": "",
+        "dialect": "mysql",
+        "host": "localhost"
+    },
+    "APP":{
+        "port": 5000,
+        "host": "localhost"
+    }
+}

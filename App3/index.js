@@ -7,7 +7,7 @@ const io = require('socket.io')(server);
 const cookieParser = require('cookie-parser');
 
 // import my function
-const db = require('./model/fbConfig');
+const db = require('./model/db');
 const middle = require('./model/middleware');
 
 // set default

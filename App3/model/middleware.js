@@ -1,5 +1,5 @@
 const {createToken , verifyToken} = require('./jwt');
-const db = require('./fbConfig');
+const db = require('./db');
 const email = "trantrungtinh4954@gmail.com";
 
 class Middleware {
