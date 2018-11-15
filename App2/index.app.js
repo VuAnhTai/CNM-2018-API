@@ -133,6 +133,8 @@ var vm = new Vue({
                         map: resultsMap,
                         draggable: true,
                     });
+                    infowindow.setContent(results[0].formatted_address);
+                    infowindow.open(map, marker);
                     google.maps.event.addListener(marker, "dragend", function () {
                         geocoder.geocode({
                                 'location': marker.getPosition()
