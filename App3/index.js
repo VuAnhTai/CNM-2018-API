@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 
 // import my function
 const db = require('./model/db');
+const Users = require('./model/users');
 const middle = require('./model/middleware');
 
 // set default
@@ -36,16 +37,14 @@ app.get('/renewtoken', middle.isLogin , (req , res) => {
 
 // socket io
 io.on('connection' , socket => {
-  db().ref('users').on('child_added', user => {
-    // console.log(user.key , user.val());
-    const rider = {id: user.key , ...user.val()};
-    socket.emit('SEND_LIST_USERS' , rider);
-    // console.log(rider)
-  });
-  db().ref('users').on('child_changed', user => {
-    const rider = {id: user.key , ...user.val()};
-    socket.emit('SEND_LIST_USERS' , rider);
-  });
+  // db().ref('users').on('child_added', user => {
+  //   const rider = {id: user.key , ...user.val()};
+  //   socket.emit('SEND_LIST_USERS' , rider);
+  // });
+  // db().ref('users').on('child_changed', user => {
+  //   const rider = {id: user.key , ...user.val()};
+  //   socket.emit('SEND_LIST_USERS' , rider);
+  // });
 
 
   socket.on('UPDATE_HISTORY' , rider => {

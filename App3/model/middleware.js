@@ -1,14 +1,24 @@
 const {createToken , verifyToken} = require('./jwt');
 const db = require('./db');
-const email = "trantrungtinh4954@gmail.com";
+const Users = require('./users');
+const email = "nguyenmyclone@gmail.com";
 
 class Middleware {
   static async signIn(usname , passw) {
-    const data = await db().ref('signin').once('value');
-    data.forEach(user => {
-      const {username , password} = user.val();
-      if(usname != username || passw != password) throw new Error('FAIL');
+    // const data = await db().ref('signin').once('value');
+    // data.forEach(user => {
+    //   const {username , password} = user.val();
+    //   if(usname != username || passw != password) throw new Error('FAIL');
+    // });
+    var rows = Users.findOne({
+      where:{
+        name: usname,
+        password: passw
+      }
     });
+    if(!rows){
+      throw new Error('FAIL');
+    }
     const payload = {username: usname , email};
     const token = await createToken(payload);
     if(!token) throw new Error('FAIL');

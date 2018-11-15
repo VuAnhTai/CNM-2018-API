@@ -6,4 +6,4 @@ const sequelize = new Sequelize(CONFIG.DB.database, CONFIG.DB.username, CONFIG.D
 },{
   timestamps: false
 });
-module.exports = Sequelize, sequelize;
+module.exports = {Sequelize, sequelize};
