@@ -1,55 +1,68 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>QLBH Client</title>
-		<meta charset="utf-8">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	</head>
-	<body>
-		<br>
-		<br>
-		<br>
-		<div class="container-fluid">
+
+<head>
+	<title>QLBH Client</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	 crossorigin="anonymous">
+</head>
+<body>
+	<br>
+	<br>
+	<br>
+	<div class="container-fluid" id="container">
+		<div id="login" v-if="loginVisible">
+			<div class="form-group">
+				<label>Tên đăng nhập:</label>
+				<input type="text" class="form-control" v-model="userName">
+			</div>
+			<div class="form-group">
+				<label>Mật khẩu:</label>
+				<input type="text" class="form-control" v-model="password">
+			</div>
+			<button type="button" class="btn btn-success" @click="login">Đăng nhập</button>
+		</div>
+		<div v-if="requestsVisible" id="requests'">
 			<div class="form-group">
 				<label for="name">Họ tên:</label>
 				<input type="text" class="form-control" id="name">
 			</div>
 			<div class="form-group">
 				<label for="phone">Số điện thoại:</label>
-				<div >
+				<div>
 					<input type="text" class="form-control" id="phone">
 				</div>
-
-
 			</div>
 			<div class="form-group">
 				<label for="address">Địa chỉ:</label>
-				<div >
+				<div>
 					<input type="text" class="form-control" id="address">
 				</div>
 			</div>
-
-            <div class="form-group">
-                <label for="note">Ghi chú:</label>
-                <div >
-                    <input type="text" class="form-control" id="note">
-                </div>
-            </div>
-
-
-			<button type="button" class="btn btn-success" id="btnSubmit">Đặt xe</button>
+			<div class="form-group">
+				<label for="note">Ghi chú:</label>
+				<div>
+					<input type="text" class="form-control" id="note">
+				</div>
+			</div>
+			<button type="button" class="btn btn-success" id="btnSubmit" @click="submitRequest">Đặt xe</button>
 		</div>
-		<script id="vietnamese-template" type="text/x-handlebars-template">
-			<input type="text" class="form-control" value="{{vietnamese}}">
-		</script>
-		<script id="fail-template" type="text/x-handlebars-template">
-			<div style="color: red;">Không tìm thấy từ cần tra trong từ điển</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	 crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js"></script>
+	<script src="index.app.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$('#requests').DataTable();
+		});
+	</script>
+</body>
 
-		</script>
-		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js"></script>
-		<script src="index.app.js"></script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-	</body>
 </html>

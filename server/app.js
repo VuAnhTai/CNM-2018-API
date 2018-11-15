@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 // app.use('/api/products/', productCtrl);
 app.use('/api/users/', userCtrl);
 app.use('/api/request', verifyAccessToken, requestCtrl);
-app.use('/app1/', app1Ctrl);
+app.use('/app1/', verifyAccessToken, app1Ctrl);
 app.use('/app2/', app2Ctrl);
 app.get('/requestAddedEvent', events.subscribeRequestAdded);
 var port = process.env.PORT || 3000;
