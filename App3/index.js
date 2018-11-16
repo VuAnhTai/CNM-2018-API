@@ -40,13 +40,12 @@ app.get('/renewtoken', middle.isLogin , (req , res) => {
 io.on('connection' , async (socket) => { 
   var rows = await Request.findAll();
   socket.emit('SEND_LIST_USERS' , rows);
-  // socket.on('UPDATE_HISTORY' , rider => {
-  //   const {id , driver} = rider;
-  //   //B1: remove users with id
-  //   db().ref(`users/${id}`).remove();
-  //   //B2: update cars with id
-  //   db().ref(`cars/${driver.id}`).update({state: false});
-  //   //B3: insert history database
-  //   db().ref('history').push(rider);
-  // });
+  socket.on('UPDATE_HISTORY' , rider => {
+    const {id , driver} = rider;
+    Request.destroy({
+      where:{
+        id: id
+      }
+    })
+  });
 });

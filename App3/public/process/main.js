@@ -234,7 +234,6 @@ $('#sign_in').click(e => {
 
   //handle user is picked up by driver
   function createSelectedContent(rider) {
-    console.log(rider);
     const {id , phone , driver, user_lng, user_lat} = rider;
     // remove watting rider
     const index = wattingRiders.findIndex(e => e.id == id);
@@ -295,8 +294,7 @@ $('#sign_in').click(e => {
   }
   // handle show direction on maps 
   function showDirection(rider) {
-    const {phone , address, username, user_lat, user_lng, lat, driver_lng, driver} = rider;
-    console.log(rider);
+    const {phone, username, user_lat, user_lng, lat, driver_lng} = rider;
     const pos_driver = {lat: +lat, lng: +driver_lng};
     const pos_rider = {lat: +user_lat, lng: +user_lng};
     const contentRider = `
@@ -341,7 +339,6 @@ $('#sign_in').click(e => {
 
   // handle direction
   function calculateAndDisplayRoute(vehiclePosMarker , userPosMarker) {
-    
     directionsDisplay.setMap(map);
     directionsDisplay.setOptions({
       suppressMarkers: true,
