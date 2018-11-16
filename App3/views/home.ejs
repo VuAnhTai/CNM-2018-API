@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <base href="../">
+    <head>
+        <title>App quản lý trạng thái điểm</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./css/styles.css" >
+        <link rel="stylesheet" href="./css/bootstrap.min.css">
+        <link rel="shortcut icon" href="./resources/favicon.ico">
+        
+        <script src="./js/jquery.js"></script>
+        <script src="./js/sweet.js"></script>      
+        <script src="socket.io/socket.io.js"></script>
+    </head>
+    <body>
+    <div class="wrapper_container container">
+        <div class="header">VEHICLE MANAGEMENT</div>
+        <div id="sign_in_container" class="form-group">
+            <label for="username">Username</label>
+            <input class="form-control" type="text" id="username" placeholder="Enter your username" maxlength="5">
+            <label for="password">Password</label>
+            <input class="form-control" type="password" id="password" placeholder="Enter your password" maxlength="20">
+            <button id="sign_in" type="button" class="btn btn-outline-success btn-sm btn-block">Sign In</button>
+        </div>
+        <div id="manage_content">
+            <div class="row box">
+                <div class="col title">
+                    <img src="./resources/user_time.png" alt="" class="image" />
+                    <p>Users are waiting the car</p>
+                </div>
+                <div class="col title">
+                    <img src="./resources/car_pickup.png" alt="" class="image" />
+                    <p>Users have been already picked up</p>
+                </div>
+            </div>
+            <div class="row list-state">
+                <div class="waiting_container col">
+                    <div class="list-group" id="waiting_content">
+
+                    </div>
+                </div>
+                <div class="selected_container col">
+                    <div class="list-group" id="watting_selected">
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="map"></div>
+    </div>    
+    <script src="https://maps.googleapis.com/maps/api/js?v3&key=AIzaSyAmaEJcN-sA33QOoIiYt8yA1OSCMcVoyto&libraries=geometry"></script>
+    <script src="./process/main.js"></script>
+    </body>
+</html>
