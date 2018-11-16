@@ -8,6 +8,9 @@ const Users = sequelize.define('Users', {
     password: Sequelize.STRING,
     created_at: Sequelize.DATE,
     deleted_at: Sequelize.DATE
+},{
+    timestamps: false,
+    tableName: "users"
 });
 
 module.exports = Users;

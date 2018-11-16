@@ -7,6 +7,9 @@ const Drivers = sequelize.define('Drivers', {
     address: Sequelize.STRING,
     created_at: Sequelize.DATE,
     deleted_at: Sequelize.DATE
+}, {
+    timestamps: false,
+    tableName: "drivers"
 });
 
 module.exports = Drivers;

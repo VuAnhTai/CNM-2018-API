@@ -206,78 +206,79 @@ $('#sign_in').click(e => {
   // socket.io
   const socket = io();
   socket.on('SEND_LIST_USERS' , rider => {
-    const {state } = rider;
-    if(state) {
-      createWaitingContent(rider);
-      return 0;
-    }
-    createSelectedContent(rider);
+    $('#watting_selected').empty();
+    $('#waiting_content').empty();
+    rider.forEach(element => {
+      if(element.status == 1){
+        createSelectedContent(element);
+      }else{
+        createWaitingContent(element);
+      }
+    });
   });
 
   // handle user watting car
-  function createWaitingContent(rider) {
-    const {id , phone , address} = rider;
+  function createWaitingContent(rider) {   
+    const {id , phone , user_lat, user_lng} = rider;
     const content = `
     <a id=${id} href="#" class="list-group-item list-group-item-action list-group-item-light">
       <img src="./resources/user_profile.png" alt="" />
       <div class="wrapper_profile">
           <h6>${phone}</h6>
-          <p>${address}</p>
+          <p>${user_lat}, ${user_lng}</p>
       </div>
     </a>`;
-    $('#watting_contend').append(content);
+    $('#waiting_content').append(content);
     wattingRiders.push(rider);
   }
 
   //handle user is picked up by driver
   function createSelectedContent(rider) {
-    const {id , phone , address , driver} = rider;
-    const {name} = driver;
-    // console.log(driver.id);
+    console.log(rider);
+    const {id , phone , driver, user_lng, user_lat} = rider;
     // remove watting rider
     const index = wattingRiders.findIndex(e => e.id == id);
     if(index >= 0) { // ton tai user o trang thai watting
       $(`#${id}`).remove();
       wattingRiders.splice(index , 1);
     }
-    
     const content = `
-    <div id="${driver.id}" class="list-group-item list-group-item-action list-group-item-warning">
+    <div id="${id}" class="list-group-item list-group-item-action list-group-item-warning">
       <img src="./resources/user_profile.png" alt="" />
       <div class="wrapper_profile">
         <h6>${phone}</h6>
-        <p>${address}</p>
+        <p>${user_lat}, ${user_lng}</p>
       </div>
       <div class="wrapper_profile_driver">
         <img src="./resources/taxi.png" alt="" />
-        <h6>${name}</h6>
+        <h6>${driver}</h6>
       </div>
       <div class="action-btns d-flex flex-row-reverse">
-        <button id="${driver.id}111" type="button" class="btn btn-outline-danger btn-sm" id="show_direction">Show Direction</button>
-        <button id="${driver.id}222" type="button" class="btn btn-outline-success btn-sm">Drop down user</button>
+        <button id="${id}111" type="button" class="btn btn-outline-danger btn-sm" id="show_direction">Show Direction</button>
+        <button id="${id}222" type="button" class="btn btn-outline-success btn-sm">Drop down user</button>
       </div>
     </div>`;
     $('#watting_selected').append(content);
     selectedRiders.push(rider);
 
-    $(`#${driver.id}111`).off('click');
-    $(`#${driver.id}222`).off('click');
+    $(`#${id}111`).off('click');
+    $(`#${id}222`).off('click');
 
-    $(`#${driver.id}111`).on('click', e => {
+    $(`#${id}111`).on('click', e => {
       e.preventDefault();
       // show direction on map
-      showDirection(driver , rider);
+      showDirection(rider);
     });
 
-    $(`#${driver.id}222`).on('click', e => {
+    $(`#${id}222`).on('click', e => {
       e.preventDefault();
       // update cars and save history
       // B1: delete data in array
-      const index = selectedRiders.findIndex(e => e.id == driver.id);
+      const index = selectedRiders.findIndex(e => e.id == id);
       selectedRiders.splice(index , 1);
       
       // B2: remove element in UI
-      $(`#${driver.id}`).remove();
+      $(`#${id}`).remove();
 
       // B3: update database
       socket.emit('UPDATE_HISTORY' , rider);
@@ -293,17 +294,17 @@ $('#sign_in').click(e => {
     directionsDisplay.setMap(null);
   }
   // handle show direction on maps 
-  function showDirection(driver , rider) {
-    const {phone , address} = rider;
-    const {name} = driver;
-    const pos_driver = {lat: +driver.lat, lng: +driver.lng};
-    const pos_rider = {lat: +rider.lat, lng: +rider.lng};
+  function showDirection(rider) {
+    const {phone , address, username, user_lat, user_lng, lat, driver_lng, driver} = rider;
+    console.log(rider);
+    const pos_driver = {lat: +lat, lng: +driver_lng};
+    const pos_rider = {lat: +user_lat, lng: +user_lng};
     const contentRider = `
     <div class="info-box-wrap">
       <img src="./resources/user_profile.png" />
       <div class="info-box-text-wrap">
         <h6 class="address">${phone}</h6>
-        <p class="price">${address}</p>
+        <p class="price">${user_lat}, ${user_lng}</p>
       </div>
     </div>`;
     const infoRider = new google.maps.InfoWindow({content: contentRider });
@@ -317,7 +318,7 @@ $('#sign_in').click(e => {
     <div class="info-box-wrap">
       <img src="./resources/driver_profile.png" />
       <div class="info-box-text-wrap">
-        <h6 class="address">${name}</h6>
+        <h6 class="address">${username}</h6>
       </div>
     </div>`;
     const infoDriver = new google.maps.InfoWindow({content: contentDriver });

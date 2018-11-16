@@ -7,8 +7,9 @@ const io = require('socket.io')(server);
 const cookieParser = require('cookie-parser');
 
 // import my function
-const db = require('./model/db');
 const Users = require('./model/users');
+const Request = require('./model/request');
+const {stream} = require('./model/db');
 const middle = require('./model/middleware');
 
 // set default
@@ -36,24 +37,16 @@ app.get('/renewtoken', middle.isLogin , (req , res) => {
 
 
 // socket io
-io.on('connection' , socket => {
-  // db().ref('users').on('child_added', user => {
-  //   const rider = {id: user.key , ...user.val()};
-  //   socket.emit('SEND_LIST_USERS' , rider);
+io.on('connection' , async (socket) => { 
+  var rows = await Request.findAll();
+  socket.emit('SEND_LIST_USERS' , rows);
+  // socket.on('UPDATE_HISTORY' , rider => {
+  //   const {id , driver} = rider;
+  //   //B1: remove users with id
+  //   db().ref(`users/${id}`).remove();
+  //   //B2: update cars with id
+  //   db().ref(`cars/${driver.id}`).update({state: false});
+  //   //B3: insert history database
+  //   db().ref('history').push(rider);
   // });
-  // db().ref('users').on('child_changed', user => {
-  //   const rider = {id: user.key , ...user.val()};
-  //   socket.emit('SEND_LIST_USERS' , rider);
-  // });
-
-
-  socket.on('UPDATE_HISTORY' , rider => {
-    const {id , driver} = rider;
-    //B1: remove users with id
-    db().ref(`users/${id}`).remove();
-    //B2: update cars with id
-    db().ref(`cars/${driver.id}`).update({state: false});
-    //B3: insert history database
-    db().ref('history').push(rider);
-  });
 });
