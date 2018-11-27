@@ -1,21 +1,145 @@
-var express = require('express'),
-    bodyParser = require('body-parser'),
-    morgan = require('morgan');
- 
-var app = express();
- 
-app.use(morgan('dev'));
-app.use(bodyParser.json());
- 
-app.get('/', (req, res) => {
-    res.sendFile('index.html', {
-      root: __dirname + "./../client"
-    });
- });
- 
-app.use(express.static(__dirname + "./../client"));
- 
-var PORT = process.env.PORT || 3002;
-app.listen(PORT, () => {
-    console.log(`API running on PORT ${PORT}`);
-});
+window.onload = function () {
+    vm.initMap();
+}
+var vm = new Vue({
+	el: '#content-wrapper',
+	data: {
+		address: '',
+		data_geocoder : {
+			lat: '',
+			lng: '',
+		},
+        your_location: {
+            lat: '',
+            lng: '',
+        }
+	},
+	methods: {
+		initMap: function () {
+            var self = this;
+            var infoWindow = new google.maps.InfoWindow;
+            var map = new google.maps.Map(
+                document.getElementById('map'), {
+                    zoom: 18,
+                    center: self.geocoder
+                });
+            self.getYourLocate(map, infoWindow);
+        },
+        getYourLocate: function(map, infoWindow) {
+        	var self = this;
+            var geocoder = new google.maps.Geocoder();
+        	if(navigator.geolocation){
+            	navigator.geolocation.getCurrentPosition(function(position){
+		            self.data_geocoder.lat = position.coords.latitude;
+		            self.data_geocoder.lng = position.coords.longitude;
+
+            		var marker = new google.maps.Marker({
+                        position: self.data_geocoder,
+                        map: map,
+                        draggable: true,
+                    });
+                    map.setCenter(self.data_geocoder);
+                    infoWindow.setPosition(self.data_geocoder);
+            		infoWindow.open(map, marker);
+					self.getAddressByMaker(map, infoWindow, marker, geocoder);
+                    self.cityCircle(map);
+            		self.updateLocationDriver(map, infoWindow, marker, geocoder);
+            		// draw radius 100m when move;
+            	}),function() {
+		            self.handleLocationError(true, infoWindow, map.getCenter());
+	          	}
+            } else {
+            	self.handleLocationError(false, infoWindow, map.getCenter());
+            }
+        },
+        cityCircle: function(map, cityCircle){
+        	var self = this;
+            var cityCircle = new google.maps.Circle({
+                strokeOpacity: 0.3,
+                strokeWeight: 1,
+                fillOpacity: 0.2,
+                map: map,
+                center: self.data_geocoder,
+                radius: 100,
+            });
+            self.your_location.lat = self.data_geocoder.lat;
+            self.your_location.lng = self.data_geocoder.lng;
+        },
+        updateLocationDriver: function(map, infoWindow, marker, geocoder){
+        	var self = this;
+	        google.maps.event.addListener(marker, "dragend", function () {
+	        	geocoder.geocode({
+                    'location': marker.getPosition()
+                },
+                function (results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                    	if(self.haversine(self.your_location, results[0].geometry.location) > 0.1){
+                    		alert('Your just move marker in radius < 100m');
+                    		marker.setPosition(self.data_geocoder);
+                    		map.setCenter(self.data_geocoder);
+                    		infoWindow.setContent(self.address);
+	                        infoWindow.open(map, marker);
+                            self.cityCircle(map, cityCircle);
+                    	}
+                    	else {
+                    		self.address = results[0].formatted_address;
+	                        self.data_geocoder.lat = results[0].geometry.location.lat();
+	                        self.data_geocoder.lng = results[0].geometry.location.lng();
+	                        infoWindow.setContent(self.address);
+	                        infoWindow.open(map, marker);
+	                        // self.cityCircle(map);
+                    	}
+                        
+                    }
+                });
+	        });
+        },
+        getAddressByMaker: function(map, infoWindow, marker, geocoder){
+        	var self = this;
+        	geocoder.geocode({
+                    'location': marker.getPosition()
+                },
+                function (results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        self.address = results[0].formatted_address;
+                        self.data_geocoder.lat = results[0].geometry.location.lat();
+                        self.data_geocoder.lng = results[0].geometry.location.lng();
+                        infoWindow.setContent(self.address);
+                        infoWindow.open(map, marker);
+                    }
+                })
+        },
+        handleLocationError: function(browserHasGeolocation, infoWindow, pos) {
+	        infoWindow.setPosition(pos);
+	        infoWindow.setContent(browserHasGeolocation ?
+	                              'Error: The Geolocation service failed.' :
+	                              'Error: Your browser doesn\'t support geolocation.');
+	        infoWindow.open(map);
+      	},
+      	haversine: function(start, end){
+      		function toRad(x) {
+			    return x * Math.PI / 180;
+			  }
+
+			  var lat1= start.lat;
+			  var lon1 = start.lng;
+
+			  var lat2 = end.lat();
+			  var lon2 = end.lng();
+
+			  var R = 6371; // km
+
+			  var x1 = lat2 - lat1;
+			  var dLat = toRad(x1);
+			  var x2 = lon2 - lon1;
+			  var dLon = toRad(x2)
+			  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+			    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+			    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+			  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+			  var d = R * c;
+
+			  return d;
+      	}
+	}
+})

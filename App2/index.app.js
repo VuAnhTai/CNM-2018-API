@@ -16,24 +16,27 @@ var vm = new Vue({
         data_geocoder: {
             lat: 10.7892047,
             lng: 106.6862193,
-            address: '323 Le Van Sy Street Ho Chi Minh City District 3'
+            address: 'nguyen van cu'
         }
     },
     methods: {
         login: function () {
             var self = this;
+
             axios.post('http://localhost:3000/app2/login', {
                     userName: self.userName,
                     password: self.password,
                 })
                 .then(function (response) {
-                    self.token = response.data.access_token;
-                    self.refToken = response.data.refresh_token;
-                })
-                .catch(function (error) {
-                    alert(error);
-                }).then(function () {
-                    self.getAllRequest();
+                    if(response.data.auth != false){
+                        self.token = response.data.access_token;
+                        self.refToken = response.data.refresh_token;
+                        self.requestsVisible = true;
+                        self.loginVisible = false;
+                    }
+                    else {
+                        alert(response.data.auth );
+                    }
                 })
         },
         getAllRequest: function () {
@@ -83,7 +86,7 @@ var vm = new Vue({
                 return;
             }
 
-            var src = new EventSource('http://localhost:3000/requestAddedEvent');
+            var src = new EventSource('http://localhost:3000/requestEventAdded');
 
             src.onerror = function (e) {
                 console.log('error: ' + e);
@@ -95,6 +98,18 @@ var vm = new Vue({
                 self.refDataTable();
 
             }, false);
+
+            var src1 = new EventSource('http://localhost:3000/requestEventUpdated');
+            src1.onerror = function (e) {
+                console.log('error: ' + e);
+            }
+            src1.addEventListener('REQUEST_UPDATED', function (e) {
+                var data = JSON.parse(e.data);
+                self.getAllRequest();
+                self.refDataTable();
+            }, false);
+
+            
         },
         refDataTable: function () {
             new Promise(function (resolve, reject) {
@@ -107,8 +122,10 @@ var vm = new Vue({
         initMap: function () {
             var self = this;
             address = self.data_geocoder.address;
+            id = -1;
             if (event.target.className) {
                 address = event.target.getAttribute('data_address');
+                id = event.target.getAttribute('data_id');
             }
             var geocoder = new google.maps.Geocoder();
             var infowindow = new google.maps.InfoWindow;
@@ -117,7 +134,11 @@ var vm = new Vue({
                     zoom: 18,
                     center: self.geocoder
                 });
+
             self.geocodeAddress(geocoder, infowindow, map, address, self);
+            if(id != -1){
+                self.updateRequest(id, 1);
+            }
         },
         geocodeAddress: function (geocoder, infowindow, resultsMap, address, self) {
             geocoder.geocode({
@@ -142,8 +163,6 @@ var vm = new Vue({
                             function (results, status) {
                                 if (status === google.maps.GeocoderStatus.OK) {
                                     self.data_geocoder.address = results[0].formatted_address;
-                                    self.data_geocoder.lat = results[0].geometry.location.lat();
-                                    self.data_geocoder.lng = results[0].geometry.location.lng();
                                     infowindow.setContent(results[0].formatted_address);
                                     infowindow.open(map, marker);
                                 }
@@ -154,8 +173,25 @@ var vm = new Vue({
                 }
             });
         },
-        createMaker: function (place) {
-            var placeLoc = place.geometry.location;
+        updateRequest: function (id, status){
+            var self = this;
+
+            axios.post('http://localhost:3000/api/request/updateLocation', {
+                    lat: self.data_geocoder.lat,
+                    lng: self.data_geocoder.lng,
+                    id: id,
+                    status: status,
+                    token: self.token
+                })
+                .then(function (response) {
+                    self.requests = response.data;
+                })
+                .catch(function (error) {
+                    if (error.response.status === 401) {
+                        self.refreshToken();
+                        return;
+                    }
+                });
         }
     }
 });

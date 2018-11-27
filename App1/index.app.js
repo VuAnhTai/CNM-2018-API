@@ -19,15 +19,18 @@ var vm = new Vue({
                     password: self.password,
                 })
                 .then(function (response) {
-                    self.token = response.data.access_token;
-                    self.refToken = response.data.refresh_token;
+                    if(response.data.auth != false){
+                        self.token = response.data.access_token;
+                        self.refToken = response.data.refresh_token;
+                        self.requestsVisible = true;
+                        self.loginVisible = false;
+                    }
+                    else {
+                        alert(response.data.auth );
+                    }
+                    
                 })
-                .catch(function (error) {
-                    alert(error);
-                }).then(function () {
-                    self.requestsVisible = true;
-                    self.loginVisible = false;
-                })
+                
         },
         submitRequest: function () {
             var self = this;

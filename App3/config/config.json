@@ -1,6 +1,6 @@
 {
     "DB":{
-        "database": "grab",
+        "database": "grab_bike",
         "username": "root",
         "password": "",
         "dialect": "mysql",

@@ -296,7 +296,6 @@ $('#sign_in').click(e => {
   // handle show direction on maps 
   function showDirection(rider) {
     const {phone , address, username, user_lat, user_lng, lat, driver_lng, driver} = rider;
-    console.log(rider);
     const pos_driver = {lat: +lat, lng: +driver_lng};
     const pos_rider = {lat: +user_lat, lng: +user_lng};
     const contentRider = `
@@ -331,12 +330,12 @@ $('#sign_in').click(e => {
 
     // show infowindow
     infoRider.open(map , riderMarker);
-    infoDriver.open(map , driverMarker);
+    // infoDriver.open(map , driverMarker);
 
-    calculateAndDisplayRoute(driverMarker , riderMarker);
-    map.addListener('click', () => 
-      hidden(driverMarker , riderMarker , infoDriver , infoRider)
-    );
+    // calculateAndDisplayRoute(driverMarker , riderMarker);
+    // map.addListener('click', () => 
+    //   hidden(driverMarker , riderMarker , infoDriver , infoRider)
+    // );
   } // end handle show direction
 
   // handle direction
