@@ -196,12 +196,19 @@ $('#sign_in').click(e => {
   const wattingRiders = [];
   const selectedRiders = [];
 
+  var directionsService = new google.maps.DirectionsService;
+  var directionsDisplay = new google.maps.DirectionsRenderer;
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 7,
+    center: {lat: 41.85, lng: -87.65}
+  });
+  directionsDisplay.setMap(map);
   // create map
-  const map = new google.maps.Map(mapDiv, mapOptions);
+  // const map = new google.maps.Map(mapDiv, mapOptions);
 
   // direction maps
-  const directionsService = new google.maps.DirectionsService;
-  const directionsDisplay = new google.maps.DirectionsRenderer;
+  // const directionsService = new google.maps.DirectionsService;
+  // const directionsDisplay = new google.maps.DirectionsRenderer;
 
   // socket.io
   const socket = io();
@@ -234,7 +241,6 @@ $('#sign_in').click(e => {
 
   //handle user is picked up by driver
   function createSelectedContent(rider) {
-    console.log(rider);
     const {id , phone , driver, user_lng, user_lat} = rider;
     // remove watting rider
     const index = wattingRiders.findIndex(e => e.id == id);
@@ -279,25 +285,13 @@ $('#sign_in').click(e => {
       
       // B2: remove element in UI
       $(`#${id}`).remove();
-
-      // B3: update database
-      socket.emit('UPDATE_HISTORY' , rider);
     });
     
   }
-  //
-  function hidden(driverMarker , riderMarker , infoDriver , infoRider){
-    driverMarker.setMap(null);
-    riderMarker.setMap(null);
-    infoRider.close();
-    infoDriver.close();
-    directionsDisplay.setMap(null);
-  }
-  // handle show direction on maps 
   function showDirection(rider) {
-    const {phone , address, username, user_lat, user_lng, lat, driver_lng, driver} = rider;
-    const pos_driver = {lat: +lat, lng: +driver_lng};
-    const pos_rider = {lat: +user_lat, lng: +user_lng};
+    const {phone , username, user_lat, user_lng, lat, driver_lng} = rider;
+    const pos_driver = {lat: 12.968535, lng: 108.134095};
+    const pos_rider = {lat: 12.968535, lng: 107.134095};
     const contentRider = `
     <div class="info-box-wrap">
       <img src="./resources/user_profile.png" />
@@ -329,16 +323,16 @@ $('#sign_in').click(e => {
     });
 
     // show infowindow
-    infoRider.open(map , riderMarker);
-    // infoDriver.open(map , driverMarker);
+    // infoRider.open(map , riderMarker);
+    infoDriver.open(map , driverMarker);
 
-    // calculateAndDisplayRoute(driverMarker , riderMarker);
-    // map.addListener('click', () => 
-    //   hidden(driverMarker , riderMarker , infoDriver , infoRider)
-    // );
+    calculateAndDisplayRoute(pos_driver , pos_rider);
+    map.addListener('click', () => 
+      hidden(driverMarker , riderMarker , infoDriver , infoRider)
+    );
   } // end handle show direction
 
-  // handle direction
+//   // handle direction
   function calculateAndDisplayRoute(vehiclePosMarker , userPosMarker) {
     
     directionsDisplay.setMap(map);
@@ -349,8 +343,8 @@ $('#sign_in').click(e => {
       }
     });
     directionsService.route({
-      origin: vehiclePosMarker.getPosition(),
-      destination: userPosMarker.getPosition(),
+      origin: vehiclePosMarker,
+      destination: userPosMarker,
       travelMode: 'DRIVING'
     }, (resp, status) => {
       if (status !== 'OK') return swal("Fail","Directions request failed due to " + status,"error");
