@@ -290,8 +290,8 @@ $('#sign_in').click(e => {
   }
   function showDirection(rider) {
     const {phone , username, user_lat, user_lng, lat, driver_lng} = rider;
-    const pos_driver = {lat: 12.968535, lng: 108.134095};
-    const pos_rider = {lat: 12.968535, lng: 107.134095};
+    const pos_driver = {lat: lat, lng: driver_lng};
+    const pos_rider = {lat: user_lat, lng: user_lng};
     const contentRider = `
     <div class="info-box-wrap">
       <img src="./resources/user_profile.png" />
