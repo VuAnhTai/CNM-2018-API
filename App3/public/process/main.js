@@ -203,12 +203,6 @@ $('#sign_in').click(e => {
     center: {lat: 41.85, lng: -87.65}
   });
   directionsDisplay.setMap(map);
-  // create map
-  // const map = new google.maps.Map(mapDiv, mapOptions);
-
-  // direction maps
-  // const directionsService = new google.maps.DirectionsService;
-  // const directionsDisplay = new google.maps.DirectionsRenderer;
 
   // socket.io
   const socket = io();
@@ -290,8 +284,8 @@ $('#sign_in').click(e => {
   }
   function showDirection(rider) {
     const {phone , username, user_lat, user_lng, lat, driver_lng} = rider;
-    const pos_driver = {lat: lat, lng: driver_lng};
-    const pos_rider = {lat: user_lat, lng: user_lng};
+    const pos_driver = {lat: parseFloat(lat), lng: parseFloat(driver_lng)};
+    const pos_rider = {lat: parseFloat(user_lat), lng: parseFloat(user_lng)};
     const contentRider = `
     <div class="info-box-wrap">
       <img src="./resources/user_profile.png" />
