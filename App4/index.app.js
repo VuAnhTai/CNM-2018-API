@@ -4,6 +4,11 @@ window.onload = function () {
 var vm = new Vue({
 	el: '#content-wrapper',
 	data: {
+        id: '',
+        userName: '',   
+        password: '',
+        loginVisible: true,
+        requestsVisible: false,
 		address: '',
 		data_geocoder : {
 			lat: '',
@@ -15,6 +20,46 @@ var vm = new Vue({
         }
 	},
 	methods: {
+        login: function () {
+            var self = this;
+
+            axios.post('http://localhost:3000/app2/login', {
+                    id: s
+                    userName: self.userName,
+                    password: self.password,
+                })
+                .then(function (response) {
+                    if(response.data.auth != false){
+                        self.token = response.data.access_token;
+                        self.refToken = response.data.refresh_token;
+                        self.requestsVisible = true;
+                        self.loginVisible = false;
+                    }
+                    else {
+                        alert(response.data.auth );
+                    }
+                })
+        },
+        getDriver: function () {
+            var self = this;
+            axios.get('http://localhost:3000/api/driver', {
+                    username: 
+                })
+                .then(function (response) {
+                    self.requests = response.data;
+                    self.requestsVisible = true;
+                    self.loginVisible = false;
+                    $('#tableRequest').DataTable().destroy();
+                })
+                .catch(function (error) {
+                    if (error.response.status === 401) {
+                        self.refreshToken();
+                        return;
+                    }
+                }).then(function () {
+                    $('#tableRequest').DataTable();
+                });
+        },
 		initMap: function () {
             var self = this;
             var infoWindow = new google.maps.InfoWindow;

@@ -14,7 +14,7 @@ var vm = new Vue({
     methods: {
         login: function () {
             var self = this;
-            axios.post('http://localhost:3000/app2/login', {
+            axios.post('http://localhost:3000/api/users/login', {
                     userName: self.userName,
                     password: self.password,
                 })
@@ -39,7 +39,7 @@ var vm = new Vue({
             var address = $('#address').val();
             var note = $('#note').val();
             var token = self.token;
-            axios.post('http://localhost:3000/app1/request', {
+            axios.post('http://localhost:3000/api/app1/request', {
                     token: token,
                     name: name,
                     phone: phone,
