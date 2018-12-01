@@ -5,8 +5,8 @@ var createConnection = () => {
     	host: '127.0.0.1',
     	port: '3306',
     	user: 'root',
-    	database: 'dbrealtime'
-    });
+    	database: 'grab_bike'
+    }); 
 }
 
 exports.load = sql => {
@@ -25,7 +25,7 @@ exports.load = sql => {
     });
 }
 
-exports.insert = sql => {
+exports.save = sql => {
     return new Promise((resolve, reject) => {
         var cn = createConnection();
         cn.connect();
@@ -33,9 +33,9 @@ exports.insert = sql => {
             if (err) {
                 reject(err);
             } else {
+                console.log(value);
                 resolve(value);
             }
-
             cn.end();
         });
     });

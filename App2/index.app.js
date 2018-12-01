@@ -23,7 +23,7 @@ var vm = new Vue({
         login: function () {
             var self = this;
 
-            axios.post('http://localhost:3000/app2/login', {
+            axios.post('http://localhost:3000/api/users/login', {
                     userName: self.userName,
                     password: self.password,
                 })
@@ -33,6 +33,7 @@ var vm = new Vue({
                         self.refToken = response.data.refresh_token;
                         self.requestsVisible = true;
                         self.loginVisible = false;
+                        console.log(self.data);
                     }
                     else {
                         alert(response.data.auth );
@@ -86,7 +87,7 @@ var vm = new Vue({
                 return;
             }
 
-            var src = new EventSource('http://localhost:3000/requestEventAdded');
+            var src = new EventSource('http://localhost:3000/api/requestEventAdded');
 
             src.onerror = function (e) {
                 console.log('error: ' + e);
@@ -99,7 +100,7 @@ var vm = new Vue({
 
             }, false);
 
-            var src1 = new EventSource('http://localhost:3000/requestEventUpdated');
+            var src1 = new EventSource('http://localhost:3000/api/requestEventUpdated');
             src1.onerror = function (e) {
                 console.log('error: ' + e);
             }
