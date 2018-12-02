@@ -26,7 +26,6 @@ router.post('/login', (req, res) => {
     }
     userRepo.login(entity)
     .then(rows => {
-        console.log(rows);
         if (rows.length > 0) {
                 var userEntity = rows[0];
                 var acToken = authRepo.generateAccessToken(userEntity);

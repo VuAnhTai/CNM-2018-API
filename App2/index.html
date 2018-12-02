@@ -53,14 +53,14 @@
 								</thead>
 								<tbody>
 									<tr v-for="c in requests">
-										<td>{{c.id}} </td>
+										<td>{{c.id}} </td> 
 										<td>{{c.username}}</td>
 										<td>{{c.phone}} </td>
 										<td>{{c.address}}</td>
 										<td>{{c.note}} </td>
 										<td>{{c.time}} </td>
-										<td v-if="c.status == 0 ">Chưa xác nhận</td>
-										<td v-if="c.status == 1 ">Da xác nhận</td>
+										<td v-if="c.status == 0">Chưa xác nhận</td>
+										<td v-if="c.status == 1">Da xác nhận</td>
 										<td><button class="btn btn-success btn-locate" type="button" :data_id="c.id" :data_address="c.address" @click="initMap">Định vị</button></td>
 									</tr>
 								</tbody>

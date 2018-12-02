@@ -33,7 +33,6 @@ var vm = new Vue({
                         self.refToken = response.data.refresh_token;
                         self.requestsVisible = true;
                         self.loginVisible = false;
-                        console.log(self.data);
                     }
                     else {
                         alert(response.data.auth );
@@ -138,7 +137,7 @@ var vm = new Vue({
 
             self.geocodeAddress(geocoder, infowindow, map, address, self);
             if(id != -1){
-                self.updateRequest(id, 1);
+                self.updateRequest(id);
             }
         },
         geocodeAddress: function (geocoder, infowindow, resultsMap, address, self) {
@@ -174,14 +173,13 @@ var vm = new Vue({
                 }
             });
         },
-        updateRequest: function (id, status){
+        updateRequest: function (id){
             var self = this;
 
             axios.post('http://localhost:3000/api/request/updateLocation', {
                     lat: self.data_geocoder.lat,
                     lng: self.data_geocoder.lng,
                     id: id,
-                    status: status,
                     token: self.token
                 })
                 .then(function (response) {
@@ -193,6 +191,14 @@ var vm = new Vue({
                         return;
                     }
                 });
+        },
+        requestDriver: function () {
+            axios.post('http://localhost:3000/api/request/requestDriver', {
+                token: self.token
+            })
+            .then (function (response) {
+                
+            })
         }
     }
 });

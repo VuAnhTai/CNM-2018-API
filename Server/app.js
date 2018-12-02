@@ -6,6 +6,7 @@ var express = require('express'),
 // var productCtrl = require('./apiControllers/productControllers');
 var userCtrl = require('./apiControllers/userControllers');
 var requestCtrl = require('./apiControllers/requestController');
+var driverCtrl = require('./apiControllers/driveController');
 var app1Ctrl = require('./apiControllers/app1Controller');
 var app2Ctrl = require('./apiControllers/app2Controller');
 var events = require('./events');
@@ -25,10 +26,12 @@ app.get('/', (req, res) => {
 // app.use('/api/products/', productCtrl);
 app.use('/api/users/', userCtrl);
 app.use('/api/request', verifyAccessToken, requestCtrl);
+app.use('/api/driver', verifyAccessToken, driverCtrl);
 app.use('/api/app1/', verifyAccessToken, app1Ctrl);
 app.use('/api/app2/', app2Ctrl);
 app.get('/api/requestEventAdded', events.subscribeAddedRequest);
 app.get('/api/requestEventUpdated', events.subscribeUpdatedRequest);
+app.get('/api/requestEventDriver', events.subscribeRequestDriver);
 var port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`QLBH API is running on port ${port}`);
