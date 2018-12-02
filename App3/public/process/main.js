@@ -203,6 +203,12 @@ $('#sign_in').click(e => {
     center: {lat: 41.85, lng: -87.65}
   });
   directionsDisplay.setMap(map);
+  // create map
+  // const map = new google.maps.Map(mapDiv, mapOptions);
+
+  // direction maps
+  // const directionsService = new google.maps.DirectionsService;
+  // const directionsDisplay = new google.maps.DirectionsRenderer;
 
   // socket.io
   const socket = io();
