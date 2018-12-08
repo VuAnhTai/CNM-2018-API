@@ -5,7 +5,7 @@ const parser = require('body-parser').urlencoded({extended: false});
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const cookieParser = require('cookie-parser');
-const stream = require('./model/db');
+const {stream} = require('./model/db');
 
 // import my function
 const Request = require('./model/request');
@@ -30,7 +30,11 @@ app.post('/signin' , parser , (req , res) => {
   })
   .catch(err => res.send({error: err.message}));
 });
-// app.get('/add-request', )
+app.get('/add-request', parser, async(req, res)=>{
+  // Request.create
+  console.log(req.body);
+  res.send({message: "SUCCESS"});
+});
 app.get('/renewtoken', middle.isLogin , (req , res) => {
   res.send({message: "SUCCESS"});
 });
