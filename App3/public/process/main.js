@@ -223,7 +223,9 @@ $('#sign_in').click(e => {
       }
     });
   });
-
+  socket.on('CHANGE_IN_DB', ()=>{
+    window.location.reload();
+  });
   // handle user watting car
   function createWaitingContent(rider) {   
     const {id , phone , user_lat, user_lng} = rider;
