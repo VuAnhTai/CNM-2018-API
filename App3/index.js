@@ -30,10 +30,10 @@ app.post('/signin' , parser , (req , res) => {
   })
   .catch(err => res.send({error: err.message}));
 });
+// app.get('/add-request', )
 app.get('/renewtoken', middle.isLogin , (req , res) => {
   res.send({message: "SUCCESS"});
 });
-
 
 // socket io
 io.on('connection' , async (socket) => { 
@@ -41,7 +41,7 @@ io.on('connection' , async (socket) => {
   socket.emit('SEND_LIST_USERS' , rows);
 });
 
-stream.on('data', ({instance, event}) =>{
+stream.on('data', async ({instance, event}) =>{
   var rows = await Request.findAll();
   socket.emit('SEND_LIST_USERS' , rows);
 });
