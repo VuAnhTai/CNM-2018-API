@@ -33,7 +33,6 @@ exports.save = sql => {
             if (err) {
                 reject(err);
             } else {
-                console.log(value);
                 resolve(value);
             }
             cn.end();

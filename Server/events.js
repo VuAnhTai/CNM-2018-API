@@ -33,6 +33,7 @@ var subscribeEvent = (req, res, event) => {
 
 var REQUEST_ADDED = 'REQUEST_ADDED';
 var REQUEST_UPDATED = 'REQUEST_UPDATED';
+var REQUEST_DRIVER = 'REQUEST_DRIVER';
 
 var subscribeAddedRequest = (req, res) => {
     subscribeEvent(req, res, REQUEST_ADDED);
@@ -40,17 +41,24 @@ var subscribeAddedRequest = (req, res) => {
 var subscribeUpdatedRequest = (req, res) => {
     subscribeEvent(req, res, REQUEST_UPDATED);
 };
+var subscribeRequestDriver = (req, res) => {
+    subscribeEvent(req, res, REQUEST_DRIVER);
+};
 var publishRequestAdded = requestObj => {
     emitter.emit(REQUEST_ADDED, requestObj);
 };
 var publishRequestUpdated = requestObj => {
-    console.log(requestObj);
     emitter.emit(REQUEST_UPDATED, requestObj);
+};
+var publishRequestDriver = requestObj => {
+    emitter.emit(REQUEST_DRIVER, requestObj);
 };
 
 module.exports = {
     subscribeAddedRequest,
     subscribeUpdatedRequest,
+    subscribeRequestDriver,
     publishRequestAdded,
-    publishRequestUpdated
+    publishRequestUpdated,
+    publishRequestDriver
 }

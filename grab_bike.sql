@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 27, 2018 at 05:22 PM
+-- Generation Time: Dec 02, 2018 at 04:58 AM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 7.2.10
 
@@ -35,16 +35,18 @@ CREATE TABLE `drivers` (
   `address` varchar(255) NOT NULL,
   `status` int(1) NOT NULL,
   `created_at` datetime NOT NULL,
-  `deleted_at` datetime NOT NULL
+  `deleted_at` datetime NOT NULL,
+  `lat` varchar(50) NOT NULL,
+  `lng` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `drivers`
 --
 
-INSERT INTO `drivers` (`id`, `name`, `phone`, `address`, `status`, `created_at`, `deleted_at`) VALUES
-(0, 'cba', '123456789', 'hùng vương', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(1, 'xyz', '01655925039', '359/2y, Le van sy, phuong 12, quan 3', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `drivers` (`id`, `name`, `phone`, `address`, `status`, `created_at`, `deleted_at`, `lat`, `lng`) VALUES
+(0, 'cba', '123456789', 'hùng vương', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', ''),
+(1, 'xyz', '01655925039', '359/2y, Le van sy, phuong 12, quan 3', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '10.8322816', '106.622976');
 
 -- --------------------------------------------------------
 
@@ -63,21 +65,16 @@ CREATE TABLE `request` (
   `driver_lng` varchar(255) NOT NULL,
   `user_lat` varchar(255) NOT NULL,
   `user_lng` varchar(255) NOT NULL,
-  `address` varchar(255) NOT NULL
+  `address` varchar(255) NOT NULL,
+  `lat` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `request`
 --
 
-INSERT INTO `request` (`id`, `username`, `driver`, `phone`, `note`, `status`, `time`, `driver_lng`, `user_lat`, `user_lng`, `address`) VALUES
-(17, 'VAT', '', '123456789', 'xxxx', 1, '2018-11-27 22:26:38', '', '10.788119', '106.67609889999994', '359/2y Lê văn sỹ Phường 12'),
-(18, 'Vũ Anh Tài', '', 'xxxxxxx', 'xxx', 1, '2018-11-27 22:43:45', '', '38.8866441', '-77.01440689999998', 'Lê văn sỹ'),
-(19, 'xxxxx', '', 'xxx', 'xxxxxx', 1, '2018-11-27 22:45:09', '', '10.788119', '106.67609889999994', 'Nguyễn đình chiều'),
-(20, 'xxxxx', '', 'xxxx', 'xxxx', 1, '2018-11-27 22:48:05', '', '38.8866441', '-77.01440689999998', 'Lê văn sỹ	'),
-(21, 'xxxxx', '', 'xxxx', 'xxxx', 1, '2018-11-27 23:10:55', '', '10.7925362', '106.67064349999998', '359/2y Lê văn sỹ Phường 12	'),
-(22, 'xxxxx', '', 'xxxx', 'xxxx', 1, '2018-11-27 23:11:45', '', '10.788119', '106.67609889999994', '359/2y Lê văn sỹ Phường 12	'),
-(23, 'xxxxx', '', 'xxxx', 'xxxx', 1, '2018-11-27 23:11:56', '', '38.8866441', '-77.01440689999998', '359/2y Lê văn sỹ Phường 12	');
+INSERT INTO `request` (`id`, `username`, `driver`, `phone`, `note`, `status`, `time`, `driver_lng`, `user_lat`, `user_lng`, `address`, `lat`) VALUES
+(37, 'Vu anh tai', '', '123456', 'asdf', 3, '2018-12-02 09:45:12', '106.622976', '10.7894365', '106.67499640000005', '359/2y, Phường 12, Lê Văn sỹ, Quận 3, TPHCM', '10.8322816');
 
 -- --------------------------------------------------------
 
@@ -96,7 +93,7 @@ CREATE TABLE `userRefreshTokenExt` (
 --
 
 INSERT INTO `userRefreshTokenExt` (`id`, `token`, `time`) VALUES
-(1, 'ruytXTokRx4v9RNgHbaK47kAYPrTdH6OtiEKLemrf2fyBFPE0Ci8g0ddkBVDiBHrkR4TSXzTIkDYqXct', '2018-11-27 23:16:42');
+(1, 'ZeisukUOG7XyPVm4HEoCcor90TpsuPHEOtew1EeFA7J9VxExOHda1sDn80MbK4CLdjhwHohDsKIZ9oR8', '2018-12-02 10:01:21');
 
 -- --------------------------------------------------------
 
@@ -119,7 +116,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `phone`, `address`, `created_at`, `deleted_at`, `password`) VALUES
-(1, 'abc', '012346789', 'An Dương Vương', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'c4ca4238a0b923820dcc509a6f75849b');
+(1, 'abc', '012346789', 'An Dương Vương', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'c4ca4238a0b923820dcc509a6f75849b'),
+(2, 'zyz', '01655925039', 'Le van sy', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'c4ca4238a0b923820dcc509a6f75849b');
 
 --
 -- Indexes for dumped tables
@@ -157,13 +155,13 @@ ALTER TABLE `drivers`
 -- AUTO_INCREMENT for table `request`
 --
 ALTER TABLE `request`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
