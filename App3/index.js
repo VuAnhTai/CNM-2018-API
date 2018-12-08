@@ -5,9 +5,9 @@ const parser = require('body-parser').urlencoded({extended: false});
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const cookieParser = require('cookie-parser');
+const stream = require('./model/db');
 
 // import my function
-const Users = require('./model/users');
 const Request = require('./model/request');
 const middle = require('./model/middleware');
 
@@ -37,6 +37,11 @@ app.get('/renewtoken', middle.isLogin , (req , res) => {
 
 // socket io
 io.on('connection' , async (socket) => { 
+  var rows = await Request.findAll();
+  socket.emit('SEND_LIST_USERS' , rows);
+});
+
+stream.on('data', ({instance, event}) =>{
   var rows = await Request.findAll();
   socket.emit('SEND_LIST_USERS' , rows);
 });
