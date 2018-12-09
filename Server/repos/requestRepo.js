@@ -1,10 +1,9 @@
 var db = require('../fn/mysql-db');
 
-const HAVECAR = 2;
-const LACATED = 1;
-const UNLOCATED = 0;
-const MOVING = 3;
-const COMPLETED = 4;
+const LACATED = 0;
+const UNLOCATED = -1;
+const MOVING = 1;
+const COMPLETED = 2;
 exports.loadAll = () => {
     var sql = `select * from request where status = '${UNLOCATED}' OR status = '${LACATED}'`;
     return db.load(sql);
@@ -20,14 +19,15 @@ exports.updateLocation = (request) => {
 exports.getRequestMinTime = () => {
     var sql = `SELECT min(time), username, id, phone, note, status, address, user_lat, user_lng
                 FROM request
-                WHERE status = 1`;
+                WHERE status = '${LACATED}'`;
     return db.save(sql);
 }
 
 exports.updateLocationDriver = (request) => {
     var sql = `UPDATE request 
-    	SET lat = '${request.lat}', driver_lng = '${request.lng}', status = '${MOVING}'
-    	WHERE id = '${request.id}'`;
+    	SET lat = '${request.lat}', driver = '${request.driver}', driver_lng = '${request.lng}', status = '${MOVING}'
+        WHERE id = '${request.id}'`;
+        console.log(request);
     return db.save(sql);
 }
 

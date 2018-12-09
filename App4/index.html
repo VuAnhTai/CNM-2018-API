@@ -65,13 +65,9 @@
             <div class="card mb-3" v-if="requestsVisible">
               <div class="card-header">
                 <i class="fa fa-motorcycle"></i>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-outline-success btn-sm active">
-                    <button name="options" id="option1" @click="requestDriver"> Ready
-                  </label>
-                  <label class="btn btn-outline-warning btn-sm">
-                    <button name="options" id="option2" @click="requestDriver"> Stand by
-                  </label>
+                <div class="btn-group btn-group-toggle active" data-toggle="buttons">
+                    <button class="btn" name="options" id="option1" @click="requestDriver"> Ready
+                    <button class="btn btn-warning" name="options" id="option2" @click="driverBusy"> Stand by
                 </div>
               </div>
               <div class="card-body">
@@ -90,7 +86,9 @@
                   </div>
                 </div>
               </div>
-            </div>
+              <button type="button" class="btn btn-warning" data-dismiss="modal" id='start' @click="start" style="display: none">START</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal" id='finish' @click="finish" style="display: none">FINISH</button>
+              </div>
           </div>
           <div class="col-12 col-md-6">
             <!-- Area Chart Example-->
@@ -128,7 +126,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" data-dismiss="modal" id='accept' @click="showDirect">Đồng ý</button>
-              <button type="button" class="btn btn-danger" data-dismiss="modal" id='not-accept' @click="updateStatus(rider.id, 1)">Từ chối</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal" id='not-accept' @click="updateStatus(rider.id, 0)">Từ chối</button>
             </div>
           </div>
         </div>
@@ -154,18 +152,18 @@
     async defer></script>
   <script>
     $('#open-modal').click(createCountDown);
-    
     function createCountDown(){
       var timeleft = 10;
       var downloadTimer = setInterval(function (){
+        --timeleft;
         if (timeleft == 0){
-          $('#accept').trigger('click');
           clearTimeout(downloadTimer);
+          // $('#not-accept').trigger('click');
         }
-        $('#count-down').text(--timeleft);
+        
+        $('#count-down').text(timeleft);
       }, 1000);
     }
-    
   </script>
 </body>
 

@@ -14,7 +14,7 @@ router.post('/request', (req, res) => {
         address: req.body.address,
         note: req.body.note,
         time: moment().format("YYYY-MM-DD HH:mm:ss"),
-        status: 0 //Chưa được định vị
+        status: -1 //Chưa được định vị
     };
     userRepo.addRequest(entity)
         .then(rows => {

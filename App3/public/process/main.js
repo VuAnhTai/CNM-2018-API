@@ -218,7 +218,8 @@ $('#sign_in').click(e => {
     rider.forEach(element => {
       if(element.status == 1){
         createSelectedContent(element);
-      }else{
+      }
+      if(element.status == 0){
         createWaitingContent(element);
       }
     });
@@ -228,12 +229,12 @@ $('#sign_in').click(e => {
   });
   // handle user watting car
   function createWaitingContent(rider) {   
-    const {id , phone , user_lat, user_lng} = rider;
+    const {id , username, phone , user_lat, user_lng} = rider;
     const content = `
     <a id=${id} href="#" class="list-group-item list-group-item-action list-group-item-light">
       <img src="./resources/user_profile.png" alt="" />
       <div class="wrapper_profile">
-          <h6>${phone}</h6>
+          <h6>${username}(${phone})</h6>
           <p>${user_lat}, ${user_lng}</p>
       </div>
     </a>`;
@@ -243,7 +244,7 @@ $('#sign_in').click(e => {
 
   //handle user is picked up by driver
   function createSelectedContent(rider) {
-    const {id , phone , driver, user_lng, user_lat} = rider;
+    const {id, username, phone , driver, user_lng, user_lat} = rider;
     // remove watting rider
     const index = wattingRiders.findIndex(e => e.id == id);
     if(index >= 0) { // ton tai user o trang thai watting

@@ -1,5 +1,4 @@
 window.onload = function () {
-    vm.setupSSE();
 }
 var vm = new Vue({
     el: '#content-wrapper',
@@ -7,7 +6,9 @@ var vm = new Vue({
         id: '',
         userName: '',
         password: '',
-        driver: '',
+        driver:  {
+            status: '1',
+        },
         rider: '',
         loginVisible: true,
         requestsVisible: false,
@@ -199,6 +200,9 @@ var vm = new Vue({
         },
         requestDriver: function () {
             var self = this;
+            self.driver.status = 0;
+            $('#option1').addClass('btn-success');
+            $('#option2').removeClass('btn-warning');
             axios.post('http://localhost:3000/api/request/requestDriver', {
                 token: self.token,
             }).then(function (response) {
@@ -210,6 +214,40 @@ var vm = new Vue({
                     return;
                 }else{
                     alert('Lỗi');
+                }
+            })
+        },
+        driverBusy: function () {
+            var self = this;
+            $('#option1').removeClass('btn-success');
+            $('#option2').addClass('btn-warning');
+            self.driver.status = 1;
+        },
+        start: function () {
+            var self = this;
+            self.driver.status = 1;
+            $('#option1').removeClass('btn-success');
+            $('#option2').addClass('btn-warning');
+            $('#start').hide();
+            $('#finish').show();
+        },
+        finish: function () {
+            var self = this;
+            $('#option1').addClass('btn-success');
+            $('#option2').removeClass('btn-warning');
+            $('#finish').hide();
+            self.driver.status = 0;
+            axios.post('http://localhost:3000/api/request/updateStatus', {
+                token: self.token,
+                id: self.rider.id,
+                status: 2,
+            }).then(function (response) {
+            }) .catch(function (error) {
+                if (error.response.status === 401) {
+                    self.refreshToken();
+                    return;
+                }else{
+                    alert(error);
                 }
             })
         },
@@ -231,9 +269,11 @@ var vm = new Vue({
         },
         showDirect: function () {
             var self = this;
+            $('#start').show();
             axios.post('http://localhost:3000/api/request/updateLocationDriver', {
                 token: self.token,
                 id: self.rider.id,
+                driver: self.driver.name,
                 lat: self.driver.lat,
                 lng: self.driver.lng,
                 
@@ -294,7 +334,7 @@ var vm = new Vue({
             axios.post('http://localhost:3000/api/request/updateStatus', {
                 token: self.token,
                 id: id,
-                status: statusstatus,
+                status: status,
             }).then(function (response) {
             }) .catch(function (error) {
                 if (error.response.status === 401) {
@@ -305,32 +345,32 @@ var vm = new Vue({
                 }
             })
         },
-        setupSSE: function () {
-            var self = this;
-            if (typeof (EventSource) === 'undefined') {
-                console.log('not support');
-                return;
-            }
+        // setupSSE: function () {
+        //     var self = this;
+        //     if (typeof (EventSource) === 'undefined') {
+        //         console.log('not support');
+        //         return;
+        //     }
 
-            var src = new EventSource('http://localhost:3000/api/requestEventAdded');
+        //     var src = new EventSource('http://localhost:3000/api/requestEventAdded');
 
-            src.onerror = function (e) {
-                console.log('error: ' + e);
-            }
+        //     src.onerror = function (e) {
+        //         console.log('error: ' + e);
+        //     }
 
-            var src1 = new EventSource('http://localhost:3000/api/requestEventUpdated');
-            src1.onerror = function (e) {
-                console.log('error: ' + e);
-            }
-            src1.addEventListener('REQUEST_UPDATED', function (e) {
-                if(self.driver.status == 0 ){
-                    self.requestDriver();
-                    self.driver.status = 1;
-                    self.updateLocationDriver(self.driver.id, self.driver.status)
-                }
-            }, false);
+        //     var src1 = new EventSource('http://localhost:3000/api/requestEventUpdated');
+        //     src1.onerror = function (e) {
+        //         console.log('error: ' + e);
+        //     }
+        //     src1.addEventListener('REQUEST_UPDATED', function (e) {
+        //         if(self.driver.status == 0 ){
+        //             self.requestDriver();
+        //             self.driver.status = 1;
+        //             self.updateLocationDriver(self.driver.id, self.driver.status)
+        //         }
+        //     }, false);
 
             
-        },
+        // },
     }
 })

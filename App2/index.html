@@ -59,8 +59,8 @@
 										<td>{{c.address}}</td>
 										<td>{{c.note}} </td>
 										<td>{{c.time}} </td>
-										<td v-if="c.status == 0">Chưa xác nhận</td>
-										<td v-if="c.status == 1">Da xác nhận</td>
+										<td v-if="c.status == -1">Chưa xác nhận</td>
+										<td v-if="c.status == 0">Da xác nhận</td>
 										<td><button class="btn btn-success btn-locate" type="button" :data_id="c.id" :data_address="c.address" @click="initMap">Định vị</button></td>
 									</tr>
 								</tbody>

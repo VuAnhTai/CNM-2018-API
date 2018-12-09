@@ -5,11 +5,10 @@ var requestRepo = require('../repos/requestRepo');
 var events = require('../events');
 //
 // load orders by User
-const HAVECAR = 2;
-const LACATED = 1;
-const UNLOCATED = 0;
-const MOVING = 3;
-const COMPLETED = 4;
+const LACATED = 0;
+const UNLOCATED = -1;
+const MOVING = 1;
+const COMPLETED = 2;
 
 router.get('/getAll', (req, res) => {
 
@@ -53,7 +52,7 @@ router.post('/requestDriver', (req, res) => {
     .then(rows => {
         if(rows[0].id !== null) {
             events.publishRequestDriver(rows);
-            requestRepo.updateStatus(rows[0].id, HAVECAR);
+            requestRepo.updateStatus(rows[0].id, MOVING);
             res.json(rows);
         }
     }).catch(err => {
