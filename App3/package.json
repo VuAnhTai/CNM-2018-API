@@ -9,7 +9,7 @@
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
-    "jsonwebtoken": "^8.1.0",
+    "jsonwebtoken": "^9.0.0",
     "mysql2": "^1.6.4",
     "nodemon": "^1.18.6",
     "sequelize": "^4.41.2",
